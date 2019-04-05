@@ -8,7 +8,7 @@ if($_POST){
 ?>
 <form method='POST'>
 <input type="file" accept="image/*" capture="camera">
-<button type="submit">
+<button type="submit">submit</button>
 </form>
 </body>
 </html>
