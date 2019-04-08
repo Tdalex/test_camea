@@ -5,10 +5,10 @@ var ctx = canvas.getContext('2d');
 var mobileCtx = mobileCanvas.getContext('2d');
 var videoSelect = document.querySelector('select#videoSource');
 var videoOption = document.getElementById('videoOption');
-var buttonGo = document.getElementById('go');
+var imageInput = document.getElementById('imageInput');
 var buttonImage = document.getElementById('go_image');
 var barcode_result = document.getElementById('dbr');
-buttonImage.addEventListener('click', handleImage, false);
+imageInput.addEventListener('click', handleImage, false);
 
 
 var isPaused = false;
