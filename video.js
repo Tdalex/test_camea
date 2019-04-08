@@ -42,6 +42,10 @@ function handleImage(e){
         }
         img.src = event.target.result;
     }
+	console.log(e);
+	console.log(e.target);
+	console.log(e.target.files);
+	
     reader.readAsDataURL(e.target.files[0]);     
 }
 
