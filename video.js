@@ -31,13 +31,27 @@ var tick = function () {
 };
 tick();
 
+if (browserRedirect() == 'pc') {
+  isPC = true;
+} else {
+  isPC = false;
+}
+		
 function handleImage(e){
     var reader = new FileReader();
     reader.onload = function(event){
+		if (isPC) {
+			var thisCanvas = canvas;
+			var thisCtx = ctx;
+		} else {
+			var thisCanvas = mobileCanvas;
+			var thisCtx = mobileCtx;
+		}
+		
         var img = new Image();
         img.onload = function(){
-            canvas.width = img.width;
-            canvas.height = img.height;
+            thisCanvas.width = img.width;
+            thisCanvas.height = img.height;
             ctx.drawImage(img,0,0);
         }
         img.src = event.target.result;
@@ -86,19 +100,6 @@ if (browserRedirect() == 'pc') {
 } else {
   isPC = false;
 }
-
-// add button event
-buttonImage.onclick = function () {
-  // if (isPC) {
-    // canvas.style.display = 'none';
-  // } else {
-    // mobileCanvas.style.display = 'none';
-  // }
-
-  // isPaused = false;
-  // buttonGo.disabled = true;
-  // scanBarcode();
-};
 
 
 // add button event
