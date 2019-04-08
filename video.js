@@ -6,7 +6,7 @@ var mobileCtx = mobileCanvas.getContext('2d');
 var videoSelect = document.querySelector('select#videoSource');
 var videoOption = document.getElementById('videoOption');
 var imageInput = document.getElementById('imageInput');
-var buttonImage = document.getElementById('go_image');
+var buttonGo = document.getElementById('go');
 var barcode_result = document.getElementById('dbr');
 imageInput.addEventListener('click', handleImage, false);
 
@@ -100,7 +100,6 @@ if (browserRedirect() == 'pc') {
 } else {
   isPC = false;
 }
-
 
 // add button event
 buttonGo.onclick = function () {
