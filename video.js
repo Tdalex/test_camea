@@ -8,7 +8,7 @@ var videoOption = document.getElementById('videoOption');
 var imageInput = document.getElementById('imageInput');
 var buttonGo = document.getElementById('go');
 var barcode_result = document.getElementById('dbr');
-imageInput.addEventListener('click', handleImage, false);
+imageInput.addEventListener('change', handleImage, false);
 
 
 var isPaused = false;
