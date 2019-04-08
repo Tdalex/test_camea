@@ -8,6 +8,8 @@ var videoOption = document.getElementById('videoOption');
 var imageInput = document.getElementById('imageInput');
 var buttonGo = document.getElementById('go');
 var barcode_result = document.getElementById('dbr');
+var barcodeCanvas = null;
+var barcodeContext = null;
 imageInput.addEventListener('change', handleImage, false);
 
 
@@ -35,48 +37,95 @@ var tick = function()
 };
 tick();
 
-if (browserRedirect() == 'pc')
+// check devices
+function browserRedirect()
+{
+    var deviceType;
+    var sUserAgent = navigator.userAgent.toLowerCase();
+    var bIsIpad = sUserAgent.match(/ipad/i) === "ipad";
+    var bIsIphoneOs = sUserAgent.match(/iphone os/i) === "iphone os";
+    var bIsMidp = sUserAgent.match(/midp/i) === "midp";
+    var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) === "rv:1.2.3.4";
+    var bIsUc = sUserAgent.match(/ucweb/i) === "ucweb";
+    var bIsAndroid = sUserAgent.match(/android/i) === "android";
+    var bIsCE = sUserAgent.match(/windows ce/i) === "windows ce";
+    var bIsWM = sUserAgent.match(/windows mobile/i) === "windows mobile";
+    if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM)
+    {
+        deviceType = 'phone';
+    }
+    else
+    {
+        deviceType = 'pc';
+    }
+    return deviceType;
+}
+
+if (browserRedirect() === 'pc')
 {
     isPC = true;
+    barcodeCanvas = canvas;
+    barcodeContext = ctx;
+    canvas.style.display = 'block';
+    mobileCanvas.style.display = 'none';
 }
 else
 {
     isPC = false;
+    barcodeCanvas = mobileCanvas;
+    barcodeContext = mobileCtx;
+    mobileCanvas.style.display = 'block';
+    canvas.style.display = 'none';
 }
 
 function handleImage(e)
 {
     var reader = new FileReader();
-    if (isPC)
-    {
-        var thisCanvas = canvas;
-        var thisCtx = ctx;
-        canvas.style.display = 'block';
-        mobileCanvas.style.display = 'none';
-    }
-    else
-    {
-        var thisCanvas = mobileCanvas;
-        var thisCtx = mobileCtx;
-        mobileCanvas.style.display = 'block';
-        canvas.style.display = 'none';
-    }
 
     reader.onload = function(event)
     {
-
         var img = new Image();
         img.onload = function()
         {
-            thisCanvas.width = img.width;
-            thisCanvas.height = img.height;
-            thisCtx.drawImage(img, 0, 0);
-        }
+            barcodeCanvas.width = img.width;
+            barcodeCanvas.height = img.height;
+            barcodeContext.drawImage(img, 0, 0);
+        };
         img.src = event.target.result;
-    }
+    };
 
     reader.readAsDataURL(e.target.files[0]);
     scanBarcodeImage();
+}
+
+// scan barcode
+function scanBarcodeImage()
+{
+    barcode_result.textContent = "";
+
+    if (ZXing === null)
+    {
+        buttonGo.disabled = false;
+        alert("Barcode Reader is not ready!");
+        return;
+    }
+
+    // read barcode
+    var imageData = barcodeContext.getImageData(0, 0, barcodeCanvas.width, barcodeCanvas.height);
+    var idd = imageData.data;
+    var image = ZXing._resize(barcodeCanvas.width, barcodeCanvas.height);
+    console.time("decode barcode");
+    for (var i = 0, j = 0; i < idd.length; i += 4, j++)
+    {
+        ZXing.HEAPU8[image + j] = idd[i];
+    }
+    var err = ZXing._decode_any(decodePtr);
+    console.timeEnd('decode barcode');
+    console.log("error code", err);
+    if (err === -2)
+    {
+        setTimeout(scanBarcodeImage, 30);
+    }
 }
 
 var decodeCallback = function(ptr, len, resultIndex, resultCount)
@@ -94,39 +143,6 @@ var decodeCallback = function(ptr, len, resultIndex, resultCount)
         mobileCanvas.style.display = 'block';
     }
 };
-
-// check devices
-function browserRedirect()
-{
-    var deviceType;
-    var sUserAgent = navigator.userAgent.toLowerCase();
-    var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
-    var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
-    var bIsMidp = sUserAgent.match(/midp/i) == "midp";
-    var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
-    var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
-    var bIsAndroid = sUserAgent.match(/android/i) == "android";
-    var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
-    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
-    if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM)
-    {
-        deviceType = 'phone';
-    }
-    else
-    {
-        deviceType = 'pc';
-    }
-    return deviceType;
-}
-
-if (browserRedirect() == 'pc')
-{
-    isPC = true;
-}
-else
-{
-    isPC = false;
-}
 
 // add button event
 buttonGo.onclick = function()
@@ -146,52 +162,11 @@ buttonGo.onclick = function()
 };
 
 // scan barcode
-function scanBarcodeImage()
-{
-    barcode_result.textContent = "";
-
-    if (ZXing == null)
-    {
-        buttonGo.disabled = false;
-        alert("Barcode Reader is not ready!");
-        return;
-    }
-
-    if (isPC)
-    {
-        var barcodeCanvas = canvas;
-        var barcodeContext = ctx;
-    }
-    else
-    {
-        var barcodeCanvas = mobileCanvas;
-        var barcodeContext = mobileCtx;
-    }
-
-    // read barcode
-    var imageData = barcodeContext.getImageData(0, 0, barcodeCanvas.width, barcodeCanvas.height);
-    var idd = imageData.data;
-    var image = ZXing._resize(barcodeCanvas.width, barcodeCanvas.height);
-    console.time("decode barcode");
-    for (var i = 0, j = 0; i < idd.length; i += 4, j++)
-    {
-        ZXing.HEAPU8[image + j] = idd[i];
-    }
-    var err = ZXing._decode_any(decodePtr);
-    console.timeEnd('decode barcode');
-    console.log("error code", err);
-    if (err == -2)
-    {
-        setTimeout(scanBarcodeImage, 30);
-    }
-}
-
-// scan barcode
 function scanBarcode()
 {
     barcode_result.textContent = "";
 
-    if (ZXing == null)
+    if (ZXing === null)
     {
         buttonGo.disabled = false;
         alert("Barcode Reader is not ready!");
@@ -241,7 +216,7 @@ function scanBarcode()
     var err = ZXing._decode_any(decodePtr);
     console.timeEnd('decode barcode');
     console.log("error code", err);
-    if (err == -2)
+    if (err === -2)
     {
         setTimeout(scanBarcode, 30);
     }
