@@ -13,206 +13,296 @@ imageInput.addEventListener('change', handleImage, false);
 
 var isPaused = false;
 var videoWidth = 640,
-  videoHeight = 480;
+videoHeight = 480;
 var mobileVideoWidth = 240,
-  mobileVideoHeight = 320;
+mobileVideoHeight = 320;
 var isPC = true;
 
 var ZXing = null;
 var decodePtr = null;
 
-var tick = function () {
-  if (window.ZXing) {
-    ZXing = ZXing();
-    decodePtr = ZXing.Runtime.addFunction(decodeCallback);
-  } else {
-    setTimeout(tick, 10);
-  }
+var tick = function()
+{
+    if (window.ZXing)
+    {
+        ZXing = ZXing();
+        decodePtr = ZXing.Runtime.addFunction(decodeCallback);
+    }
+    else
+    {
+        setTimeout(tick, 10);
+    }
 };
 tick();
 
-if (browserRedirect() == 'pc') {
-  isPC = true;
-} else {
-  isPC = false;
+if (browserRedirect() == 'pc')
+{
+    isPC = true;
 }
-		
-function handleImage(e){
+else
+{
+    isPC = false;
+}
+
+function handleImage(e)
+{
     var reader = new FileReader();
-    reader.onload = function(event){
-		if (isPC) {
-			var thisCanvas = canvas;
-			var thisCtx = ctx;
-		} else {
-			var thisCanvas = mobileCanvas;
-			var thisCtx = mobileCtx;
-		}
-		
+    if (isPC)
+    {
+        var thisCanvas = canvas;
+        var thisCtx = ctx;
+        canvas.style.display = 'block';
+        mobileCanvas.style.display = 'none';
+    }
+    else
+    {
+        var thisCanvas = mobileCanvas;
+        var thisCtx = mobileCtx;
+        mobileCanvas.style.display = 'block';
+        canvas.style.display = 'none';
+    }
+
+    reader.onload = function(event)
+    {
+
         var img = new Image();
-        img.onload = function(){
+        img.onload = function()
+        {
             thisCanvas.width = img.width;
             thisCanvas.height = img.height;
-            ctx.drawImage(img,0,0);
+            thisCtx.drawImage(img, 0, 0);
         }
         img.src = event.target.result;
     }
-	console.log(e);
-	console.log(e.target);
-	console.log(e.target.files);
-	
-    reader.readAsDataURL(e.target.files[0]);     
+
+    reader.readAsDataURL(e.target.files[0]);
+    scanBarcodeImage();
 }
 
-var decodeCallback = function (ptr, len, resultIndex, resultCount) {
-  var result = new Uint8Array(ZXing.HEAPU8.buffer, ptr, len);
-  console.log(String.fromCharCode.apply(null, result));
-  barcode_result.textContent = String.fromCharCode.apply(null, result);
-  buttonGo.disabled = false;
-  if (isPC) {
-    canvas.style.display = 'block';
-  } else {
-    mobileCanvas.style.display = 'block';
-  }
+var decodeCallback = function(ptr, len, resultIndex, resultCount)
+{
+    var result = new Uint8Array(ZXing.HEAPU8.buffer, ptr, len);
+    console.log(String.fromCharCode.apply(null, result));
+    barcode_result.textContent = String.fromCharCode.apply(null, result);
+    buttonGo.disabled = false;
+    if (isPC)
+    {
+        canvas.style.display = 'block';
+    }
+    else
+    {
+        mobileCanvas.style.display = 'block';
+    }
 };
 
 // check devices
-function browserRedirect() {
-  var deviceType;
-  var sUserAgent = navigator.userAgent.toLowerCase();
-  var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
-  var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
-  var bIsMidp = sUserAgent.match(/midp/i) == "midp";
-  var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
-  var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
-  var bIsAndroid = sUserAgent.match(/android/i) == "android";
-  var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
-  var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
-  if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
-    deviceType = 'phone';
-  } else {
-    deviceType = 'pc';
-  }
-  return deviceType;
+function browserRedirect()
+{
+    var deviceType;
+    var sUserAgent = navigator.userAgent.toLowerCase();
+    var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+    var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+    var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+    var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+    var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+    var bIsAndroid = sUserAgent.match(/android/i) == "android";
+    var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+    if (bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM)
+    {
+        deviceType = 'phone';
+    }
+    else
+    {
+        deviceType = 'pc';
+    }
+    return deviceType;
 }
 
-if (browserRedirect() == 'pc') {
-  isPC = true;
-} else {
-  isPC = false;
+if (browserRedirect() == 'pc')
+{
+    isPC = true;
+}
+else
+{
+    isPC = false;
 }
 
 // add button event
-buttonGo.onclick = function () {
-  if (isPC) {
-    canvas.style.display = 'none';
-  } else {
-    mobileCanvas.style.display = 'none';
-  }
+buttonGo.onclick = function()
+{
+    if (isPC)
+    {
+        canvas.style.display = 'none';
+    }
+    else
+    {
+        mobileCanvas.style.display = 'none';
+    }
 
-  isPaused = false;
-  buttonGo.disabled = true;
-  scanBarcode();
+    isPaused = false;
+    buttonGo.disabled = true;
+    scanBarcode();
 };
 
 // scan barcode
-function scanBarcode() {
-  barcode_result.textContent = "";
+function scanBarcodeImage()
+{
+    barcode_result.textContent = "";
 
-  if (ZXing == null) {
-    buttonGo.disabled = false;
-    alert("Barcode Reader is not ready!");
-    return;
-  }
+    if (ZXing == null)
+    {
+        buttonGo.disabled = false;
+        alert("Barcode Reader is not ready!");
+        return;
+    }
 
-  var data = null,
+    if (isPC)
+    {
+        var barcodeCanvas = canvas;
+        var barcodeContext = ctx;
+    }
+    else
+    {
+        var barcodeCanvas = mobileCanvas;
+        var barcodeContext = mobileCtx;
+    }
+
+    // read barcode
+    var imageData = barcodeContext.getImageData(0, 0, barcodeCanvas.width, barcodeCanvas.height);
+    var idd = imageData.data;
+    var image = ZXing._resize(barcodeCanvas.width, barcodeCanvas.height);
+    console.time("decode barcode");
+    for (var i = 0, j = 0; i < idd.length; i += 4, j++)
+    {
+        ZXing.HEAPU8[image + j] = idd[i];
+    }
+    var err = ZXing._decode_any(decodePtr);
+    console.timeEnd('decode barcode');
+    console.log("error code", err);
+    if (err == -2)
+    {
+        setTimeout(scanBarcodeImage, 30);
+    }
+}
+
+// scan barcode
+function scanBarcode()
+{
+    barcode_result.textContent = "";
+
+    if (ZXing == null)
+    {
+        buttonGo.disabled = false;
+        alert("Barcode Reader is not ready!");
+        return;
+    }
+
+    var data = null,
     context = null,
     width = 0,
     height = 0,
     dbrCanvas = null;
 
-  if (isPC) {
-    context = ctx;
-    width = videoWidth;
-    height = videoHeight;
-    dbrCanvas = canvas;
-  } else {
-    context = mobileCtx;
-    width = mobileVideoWidth;
-    height = mobileVideoHeight;
-    dbrCanvas = mobileCanvas;
-  }
+    if (isPC)
+    {
+        context = ctx;
+        width = videoWidth;
+        height = videoHeight;
+        dbrCanvas = canvas;
+    }
+    else
+    {
+        context = mobileCtx;
+        width = mobileVideoWidth;
+        height = mobileVideoHeight;
+        dbrCanvas = mobileCanvas;
+    }
 
-  context.drawImage(videoElement, 0, 0, width, height);
+    context.drawImage(videoElement, 0, 0, width, height);
 
-  var vid = document.getElementById("video");
-  console.log("video width: " + vid.videoWidth + ", height: " + vid.videoHeight);
-  var barcodeCanvas = document.createElement("canvas");
-  barcodeCanvas.width = vid.videoWidth;
-  barcodeCanvas.height = vid.videoHeight;
-  var barcodeContext = barcodeCanvas.getContext('2d');
-  var imageWidth = vid.videoWidth, imageHeight = vid.videoHeight;
-  barcodeContext.drawImage(videoElement, 0, 0, imageWidth, imageHeight);
-  // read barcode
-  var imageData = barcodeContext.getImageData(0, 0, imageWidth, imageHeight);
-  var idd = imageData.data;
-  var image = ZXing._resize(imageWidth, imageHeight);
-  console.time("decode barcode");
-  for (var i = 0, j = 0; i < idd.length; i += 4, j++) {
-    ZXing.HEAPU8[image + j] = idd[i];
-  }
-  var err = ZXing._decode_any(decodePtr);
-  console.timeEnd('decode barcode');
-  console.log("error code", err);
-  if (err == -2) {
-    setTimeout(scanBarcode, 30);
-  }
+    var vid = document.getElementById("video");
+    console.log("video width: " + vid.videoWidth + ", height: " + vid.videoHeight);
+    var barcodeCanvas = document.createElement("canvas");
+    barcodeCanvas.width = vid.videoWidth;
+    barcodeCanvas.height = vid.videoHeight;
+    var barcodeContext = barcodeCanvas.getContext('2d');
+    var imageWidth = vid.videoWidth, imageHeight = vid.videoHeight;
+    barcodeContext.drawImage(videoElement, 0, 0, imageWidth, imageHeight);
+    // read barcode
+    var imageData = barcodeContext.getImageData(0, 0, imageWidth, imageHeight);
+    var idd = imageData.data;
+    var image = ZXing._resize(imageWidth, imageHeight);
+    console.time("decode barcode");
+    for (var i = 0, j = 0; i < idd.length; i += 4, j++)
+    {
+        ZXing.HEAPU8[image + j] = idd[i];
+    }
+    var err = ZXing._decode_any(decodePtr);
+    console.timeEnd('decode barcode');
+    console.log("error code", err);
+    if (err == -2)
+    {
+        setTimeout(scanBarcode, 30);
+    }
 }
+
 // https://github.com/samdutton/simpl/tree/gh-pages/getusermedia/sources 
 var videoSelect = document.querySelector('select#videoSource');
 
 navigator.mediaDevices.enumerateDevices()
-  .then(gotDevices).then(getStream).catch(handleError);
+.then(gotDevices).then(getStream).catch(handleError);
 
 videoSelect.onchange = getStream;
 
-function gotDevices(deviceInfos) {
-  for (var i = deviceInfos.length - 1; i >= 0; --i) {
-    var deviceInfo = deviceInfos[i];
-    var option = document.createElement('option');
-    option.value = deviceInfo.deviceId;
-    if (deviceInfo.kind === 'videoinput') {
-      option.text = deviceInfo.label || 'camera ' +
-        (videoSelect.length + 1);
-      videoSelect.appendChild(option);
-    } else {
-      console.log('Found one other kind of source/device: ', deviceInfo);
+function gotDevices(deviceInfos)
+{
+    for (var i = deviceInfos.length - 1; i >= 0; --i)
+    {
+        var deviceInfo = deviceInfos[i];
+        var option = document.createElement('option');
+        option.value = deviceInfo.deviceId;
+        if (deviceInfo.kind === 'videoinput')
+        {
+            option.text = deviceInfo.label || 'camera ' +
+            (videoSelect.length + 1);
+            videoSelect.appendChild(option);
+        }
+        else
+        {
+            console.log('Found one other kind of source/device: ', deviceInfo);
+        }
     }
-  }
 }
 
-function getStream() {
-  buttonGo.disabled = false;
-  if (window.stream) {
-    window.stream.getTracks().forEach(function(track) {
-      track.stop();
-    });
-  }
-
-  var constraints = {
-    video: {
-      deviceId: {exact: videoSelect.value}
+function getStream()
+{
+    buttonGo.disabled = false;
+    if (window.stream)
+    {
+        window.stream.getTracks().forEach(function(track)
+        {
+            track.stop();
+        });
     }
-  };
 
-  navigator.mediaDevices.getUserMedia(constraints).
+    var constraints = {
+        video: {
+            deviceId: {exact: videoSelect.value}
+        }
+    };
+
+    navigator.mediaDevices.getUserMedia(constraints).
     then(gotStream).catch(handleError);
 }
 
-function gotStream(stream) {
-  window.stream = stream; // make stream available to console
-  videoElement.srcObject = stream;
+function gotStream(stream)
+{
+    window.stream = stream; // make stream available to console
+    videoElement.srcObject = stream;
 }
 
-function handleError(error) {
-  console.log('Error: ', error);
+function handleError(error)
+{
+    console.log('Error: ', error);
 }
