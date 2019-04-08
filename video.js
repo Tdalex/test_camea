@@ -6,7 +6,10 @@ var mobileCtx = mobileCanvas.getContext('2d');
 var videoSelect = document.querySelector('select#videoSource');
 var videoOption = document.getElementById('videoOption');
 var buttonGo = document.getElementById('go');
+var buttonImage = document.getElementById('go_image');
 var barcode_result = document.getElementById('dbr');
+buttonImage.addEventListener('click', handleImage, false);
+
 
 var isPaused = false;
 var videoWidth = 640,
@@ -27,6 +30,20 @@ var tick = function () {
   }
 };
 tick();
+
+function handleImage(e){
+    var reader = new FileReader();
+    reader.onload = function(event){
+        var img = new Image();
+        img.onload = function(){
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img,0,0);
+        }
+        img.src = event.target.result;
+    }
+    reader.readAsDataURL(e.target.files[0]);     
+}
 
 var decodeCallback = function (ptr, len, resultIndex, resultCount) {
   var result = new Uint8Array(ZXing.HEAPU8.buffer, ptr, len);
@@ -65,6 +82,19 @@ if (browserRedirect() == 'pc') {
 } else {
   isPC = false;
 }
+
+// add button event
+buttonImage.onclick = function () {
+  // if (isPC) {
+    // canvas.style.display = 'none';
+  // } else {
+    // mobileCanvas.style.display = 'none';
+  // }
+
+  // isPaused = false;
+  // buttonGo.disabled = true;
+  // scanBarcode();
+};
 
 
 // add button event
