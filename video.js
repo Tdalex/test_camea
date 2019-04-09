@@ -6,11 +6,13 @@ var mobileCtx = mobileCanvas.getContext('2d');
 var videoSelect = document.querySelector('select#videoSource');
 var videoOption = document.getElementById('videoOption');
 var imageInput = document.getElementById('imageInput');
+var imageInputCamera = document.getElementById('imageInputCamera');
 var buttonGo = document.getElementById('go');
 var barcode_result = document.getElementById('dbr');
 var barcodeCanvas = null;
 var barcodeContext = null;
 imageInput.addEventListener('change', handleImage, false);
+imageInputCamera.addEventListener('change', handleImage, false);
 
 
 var isPaused = false;
@@ -104,6 +106,7 @@ function handleImage(e)
             {
                 ratio = img.height / barcodeCanvas.height;
             }
+
             barcodeCanvas.width = img.width / ratio;
             barcodeCanvas.height = img.height / ratio;
             barcodeContext.drawImage(img, 0, 0, img.width, img.height, 0, 0, barcodeCanvas.width, barcodeCanvas.height);
