@@ -6,20 +6,18 @@ var mobileCtx = mobileCanvas.getContext('2d');
 var videoSelect = document.querySelector('select#videoSource');
 var videoOption = document.getElementById('videoOption');
 var imageInput = document.getElementById('imageInput');
-var imageInputCamera = document.getElementById('imageInputCamera');
 var buttonGo = document.getElementById('go');
 var barcode_result = document.getElementById('dbr');
 var barcodeCanvas = null;
 var barcodeContext = null;
 imageInput.addEventListener('change', handleImage, false);
-imageInputCamera.addEventListener('change', handleImage, false);
 
 
 var isPaused = false;
 var videoWidth = 640,
 videoHeight = 480;
-var mobileVideoWidth = 240,
-mobileVideoHeight = 320;
+var mobileVideoWidth = 320,
+mobileVideoHeight = 240;
 var isPC = true;
 
 var ZXing = null;
@@ -119,7 +117,7 @@ function handleImage(e)
 }
 
 // scan barcode
-function scanBarcodeImage()
+function scanBarcodeImage(rotate = false)
 {
     barcode_result.textContent = "";
 
@@ -142,9 +140,9 @@ function scanBarcodeImage()
     var err = ZXing._decode_any(decodePtr);
     console.timeEnd('decode barcode');
     console.log("error code", err);
-    if (err === -2)
+    if (err === -2 && rotate === false)
     {
-        setTimeout(scanBarcodeImage, 30);
+        scanBarcodeImage(true);
     }
 }
 
