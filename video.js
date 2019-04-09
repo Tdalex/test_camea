@@ -89,7 +89,7 @@ initCanvas();
 function handleImage(e)
 {
     var reader = new FileReader();
-initCanvas();
+    initCanvas();
     reader.onload = function(event)
     {
         var img = new Image();
@@ -99,19 +99,14 @@ initCanvas();
             if (img.width > barcodeCanvas.width)
             {
                 ratio = img.width / barcodeCanvas.width;
-                barcodeCanvas.height = img.height / ratio;
             }
             else if (img.height > barcodeCanvas.height)
             {
                 ratio = img.height / barcodeCanvas.height;
-                barcodeCanvas.width = img.width / ratio;
             }
-            else
-            {
-                barcodeCanvas.width = img.width;
-                barcodeCanvas.height = img.height;
-            }
-            barcodeContext.drawImage(img, 0, 0);
+            barcodeCanvas.width = img.width / ratio;
+            barcodeCanvas.height = img.height / ratio;
+            barcodeContext.drawImage(img, 0, 0, img.width, img.height, 0, 0, barcodeCanvas.width, barcodeCanvas.height);
         };
         img.src = event.target.result;
     };
