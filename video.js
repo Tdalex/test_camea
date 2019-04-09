@@ -87,8 +87,8 @@ function handleImage(e)
         var img = new Image();
         img.onload = function()
         {
-            barcodeCanvas.width = img.width;
-            barcodeCanvas.height = img.height;
+//            barcodeCanvas.width = img.width;
+//            barcodeCanvas.height = img.height;
             barcodeContext.drawImage(img, 0, 0);
         };
         img.src = event.target.result;
