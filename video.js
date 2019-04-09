@@ -89,7 +89,7 @@ function handleImage(e)
         {
 //            barcodeCanvas.width = img.width;
 //            barcodeCanvas.height = img.height;
-            barcodeContext.drawImage(img, 0, 0);
+            barcodeContext.drawImage(img, 0, 0, barcodeCanvas.width, barcodeCanvas.height);
         };
         img.src = event.target.result;
     };
