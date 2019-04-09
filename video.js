@@ -263,10 +263,6 @@ function gotDevices(deviceInfos)
             (videoSelect.length + 1);
             videoSelect.appendChild(option);
         }
-        else
-        {
-            console.log('Found one other kind of source/device: ', deviceInfo);
-        }
     }
 }
 
