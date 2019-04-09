@@ -10,6 +10,7 @@ var buttonGo = document.getElementById('go');
 var barcode_result = document.getElementById('dbr');
 var barcodeCanvas = null;
 var barcodeContext = null;
+var rotate = false;
 imageInput.addEventListener('change', handleImage, false);
 
 
@@ -117,7 +118,7 @@ function handleImage(e)
 }
 
 // scan barcode
-function scanBarcodeImage(rotate = false)
+function scanBarcodeImage()
 {
     barcode_result.textContent = "";
 
@@ -133,16 +134,19 @@ function scanBarcodeImage(rotate = false)
     var idd = imageData.data;
     var image = ZXing._resize(barcodeCanvas.width, barcodeCanvas.height);
     console.time("decode barcode");
+
     for (var i = 0, j = 0; i < idd.length; i += 4, j++)
     {
         ZXing.HEAPU8[image + j] = idd[i];
     }
+
     var err = ZXing._decode_any(decodePtr);
     console.timeEnd('decode barcode');
     console.log("error code", err);
     if (err === -2 && rotate === false)
     {
-        scanBarcodeImage(true);
+        barcodeContext.rotate((Math.PI / 180) * 90);
+        scanBarcodeImage();
     }
 }
 
@@ -174,25 +178,15 @@ function scanBarcode()
         return;
     }
 
-    var data = null,
-    context = null,
-    width = 0,
-    height = 0,
-    dbrCanvas = null;
+    var context = mobileCtx,
+    width = mobileVideoWidth,
+    height = mobileVideoHeight;
 
     if (isPC)
     {
         context = ctx;
         width = videoWidth;
         height = videoHeight;
-        dbrCanvas = canvas;
-    }
-    else
-    {
-        context = mobileCtx;
-        width = mobileVideoWidth;
-        height = mobileVideoHeight;
-        dbrCanvas = mobileCanvas;
     }
 
     context.drawImage(videoElement, 0, 0, width, height);
