@@ -61,35 +61,57 @@ function browserRedirect()
     return deviceType;
 }
 
-if (browserRedirect() === 'pc')
+function initCanvas()
 {
-    isPC = true;
-    barcodeCanvas = canvas;
-    barcodeContext = ctx;
-    canvas.style.display = 'block';
-    mobileCanvas.style.display = 'none';
+    if (browserRedirect() === 'pc')
+    {
+        isPC = true;
+        barcodeCanvas = canvas;
+        barcodeContext = ctx;
+        barcodeCanvas.width = 640;
+        barcodeCanvas.height = 480;
+        canvas.style.display = 'block';
+        mobileCanvas.style.display = 'none';
+    }
+    else
+    {
+        isPC = false;
+        barcodeCanvas = mobileCanvas;
+        barcodeContext = mobileCtx;
+        barcodeCanvas.width = 240;
+        barcodeCanvas.height = 320;
+        mobileCanvas.style.display = 'block';
+        canvas.style.display = 'none';
+    }
 }
-else
-{
-    isPC = false;
-    barcodeCanvas = mobileCanvas;
-    barcodeContext = mobileCtx;
-    mobileCanvas.style.display = 'block';
-    canvas.style.display = 'none';
-}
+initCanvas();
 
 function handleImage(e)
 {
     var reader = new FileReader();
-
+initCanvas();
     reader.onload = function(event)
     {
         var img = new Image();
         img.onload = function()
         {
-//            barcodeCanvas.width = img.width;
-//            barcodeCanvas.height = img.height;
-            barcodeContext.drawImage(img, 0, 0, barcodeCanvas.width, barcodeCanvas.height);
+            var ratio = 1;
+            if (img.width > barcodeCanvas.width)
+            {
+                ratio = img.width / barcodeCanvas.width;
+                barcodeCanvas.height = img.height / ratio;
+            }
+            else if (img.height > barcodeCanvas.height)
+            {
+                ratio = img.height / barcodeCanvas.height;
+                barcodeCanvas.width = img.width / ratio;
+            }
+            else
+            {
+                barcodeCanvas.width = img.width;
+                barcodeCanvas.height = img.height;
+            }
+            barcodeContext.drawImage(img, 0, 0);
         };
         img.src = event.target.result;
     };
