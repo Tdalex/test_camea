@@ -80,8 +80,8 @@ function initCanvas()
         isPC = false;
         barcodeCanvas = mobileCanvas;
         barcodeContext = mobileCtx;
-        barcodeCanvas.width = 240;
-        barcodeCanvas.height = 320;
+        barcodeCanvas.width = 320;
+        barcodeCanvas.height = 240;
         mobileCanvas.style.display = 'block';
         canvas.style.display = 'none';
     }
