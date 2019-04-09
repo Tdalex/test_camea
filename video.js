@@ -98,13 +98,13 @@ function handleImage(e)
         img.onload = function()
         {
             var ratio = 1;
-            if (img.width > barcodeCanvas.width)
-            {
-                ratio = img.width / barcodeCanvas.width;
-            }
-            else if (img.height > barcodeCanvas.height)
+            if (img.height > barcodeCanvas.height)
             {
                 ratio = img.height / barcodeCanvas.height;
+            }
+            else if (img.width > barcodeCanvas.width)
+            {
+                ratio = img.width / barcodeCanvas.width;
             }
 
             barcodeCanvas.width = img.width / ratio;
@@ -154,28 +154,11 @@ var decodeCallback = function(ptr, len, resultIndex, resultCount)
     console.log(String.fromCharCode.apply(null, result));
     barcode_result.textContent = String.fromCharCode.apply(null, result);
     buttonGo.disabled = false;
-    if (isPC)
-    {
-        canvas.style.display = 'block';
-    }
-    else
-    {
-        mobileCanvas.style.display = 'block';
-    }
 };
 
 // add button event
 buttonGo.onclick = function()
 {
-    if (isPC)
-    {
-        canvas.style.display = 'none';
-    }
-    else
-    {
-        mobileCanvas.style.display = 'none';
-    }
-
     isPaused = false;
     buttonGo.disabled = true;
     scanBarcode();
