@@ -81,30 +81,35 @@
                 });
 
                 document.getElementById('startButton').addEventListener('click', () => {
-                    barReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
-                        console.log(result);
-                        document.getElementById('result').textContent = result.text;
-                    }).catch((err) => {
-                        console.error(err);
-                        document.getElementById('result').textContent = err;
-                    });
-
-                    qrReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
-                        console.log(result);
-                        document.getElementById('result').textContent = result.text;
-                    }).catch((err) => {
-                        console.error(err);
-                        document.getElementById('result').textContent = err;
-                    });
-                    console.log(`Started continous decode from camera with id ${selectedDeviceId}`);
+                    barcodeReader();
+                    qrcodeReader();
                 });
+
+                var barcodeReader = function()
+                {
+                    barReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) =>
+                    {
+                        document.getElementById('result').textContent = result.text;
+                        barcodeReader();
+                    }).catch((err) => {
+                        document.getElementById('result').textContent = err;
+                    });
+                }
+
+                var qrcodeReader = function()
+                {
+                    qrReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
+                        document.getElementById('result').textContent = result.text;
+                        qrcodeReader();
+                    }).catch((err) => {
+                        document.getElementById('result').textContent = err;
+                    });
+                }
 
                 document.getElementById('resetButton').addEventListener('click', () => {
                     document.getElementById('result').textContent = '';
                     barReader.reset();
                     qrReader.reset();
-
-                    console.log('Reset.');
                 });
             });
         </script>
