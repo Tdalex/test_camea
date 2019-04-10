@@ -45,9 +45,8 @@
                 .then((videoInputDevices) => {
                     videoInputDevices.reverse();
                     selectedDeviceId = videoInputDevices[0].deviceId;
-                    if (videoInputDevices.length > 1)
-                    {
-
+//                    if (videoInputDevices.length > 1)
+//                    {
                         videoInputDevices.forEach((element) => {
                             sourceOption.text = element.label;
                             sourceOption.value = element.deviceId;
@@ -59,7 +58,7 @@
                         };
 
                         sourceSelectPanel.style.display = 'block';
-                    }
+//                    }
                 })
                 .catch((err) => {
                     console.error(err);
