@@ -111,6 +111,7 @@
                 var ctx = canvas.getContext('2d');
                 var imageInput = document.getElementById('image');
                 imageInput.addEventListener('change', handleImage, false);
+                var img;
 
                 function handleImage(e)
                 {
@@ -120,7 +121,7 @@
 
                     reader.onload = function(event)
                     {
-                        var img = new Image();
+                        img = new Image();
                         img.onload = function()
                         {
                             var ratio = 1;
@@ -132,29 +133,27 @@
                             {
                                 ratio = img.width / canvas.width;
                             }
-
                             canvas.width = img.width / ratio;
                             canvas.height = img.height / ratio;
                             ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
                         };
                         img.src = event.target.result;
+
+                        qrReader.decodeFromImage(undefined, event.target.result).then((result) => {
+                            document.getElementById('result').textContent = result.text;
+                        }).catch((err) => {
+                            document.getElementById('error').textContent = err;
+                        });
+
+                        barReader.decodeFromImage(undefined, event.target.result).then((result) => {
+                            document.getElementById('result').textContent = result.text;
+                        }).catch((err) => {
+                            document.getElementById('error').textContent = err;
+                        });
                     };
 
                     reader.readAsDataURL(e.target.files[0]);
-                    qrReader.decodeFromImage(canvas).then((result) => {
-                        document.getElementById('result').textContent = result.text;
-                    }).catch((err) => {
-                        document.getElementById('error').textContent = err;
-                    });
-
-                    barReader.decodeFromImage(canvas).then((result) => {
-                        document.getElementById('result').textContent = result.text;
-                    }).catch((err) => {
-                        document.getElementById('error').textContent = err;
-                    });
                 }
-
-
             });
         </script>
 
