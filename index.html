@@ -36,13 +36,16 @@
                 let selectedDeviceId;
                 const qrReader = new ZXing.BrowserQRCodeReader();
                 const barReader = new ZXing.BrowserBarcodeReader();
+                const sourceSelect = document.getElementById('sourceSelect');
+                const sourceSelectPanel = document.getElementById('sourceSelectPanel');
 
                 qrReader.getVideoInputDevices()
                 .then((videoInputDevices) => {
-                    const sourceSelect = document.getElementById('sourceSelect');
                     selectedDeviceId = videoInputDevices[0].deviceId;
-                    if (videoInputDevices.length >= 1)
+                    if (videoInputDevices.length > 1)
                     {
+                        selectedDeviceId = videoInputDevices[1].deviceId;
+
                         videoInputDevices.forEach((element) => {
                             const sourceOption = document.createElement('option');
                             sourceOption.text = element.label;
@@ -54,25 +57,6 @@
                             selectedDeviceId = sourceSelect.value;
                         };
 
-                        const sourceSelectPanel = document.getElementById('sourceSelectPanel');
-                        sourceSelectPanel.style.display = 'block';
-                    }
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
-
-                barReader.getVideoInputDevices()
-                .then((videoInputDevices) => {
-                    const sourceSelect = document.getElementById('sourceSelect');
-                    selectedDeviceId = videoInputDevices[0].deviceId;
-                    if (videoInputDevices.length >= 1)
-                    {
-                        sourceSelect.onchange = () => {
-                            selectedDeviceId = sourceSelect.value;
-                        };
-
-                        const sourceSelectPanel = document.getElementById('sourceSelectPanel');
                         sourceSelectPanel.style.display = 'block';
                     }
                 })
