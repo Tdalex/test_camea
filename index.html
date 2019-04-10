@@ -39,16 +39,23 @@
                 const barReader = new ZXing.BrowserBarcodeReader();
                 const sourceSelect = document.getElementById('sourceSelect');
                 const sourceSelectPanel = document.getElementById('sourceSelectPanel');
+                const sourceOption = document.createElement('option');
 
                 qrReader.getVideoInputDevices()
                 .then((videoInputDevices) => {
-                    selectedDeviceId = videoInputDevices[1].deviceId;
+                    selectedDeviceId = videoInputDevices[0].deviceId;
                     if (videoInputDevices.length > 1)
                     {
-                        videoInputDevices.forEach((element) => {
-                            const sourceOption = document.createElement('option');
+                        selectedDeviceId = videoInputDevices[1].deviceId;
+
+                        videoInputDevices.forEach(function(element, idx, array)
+                        {
                             sourceOption.text = element.label;
                             sourceOption.value = element.deviceId;
+                            if (idx === array.length)
+                            {
+                                sourceOption.checked = true;
+                            }
                             sourceSelect.appendChild(sourceOption);
                         });
 
