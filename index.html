@@ -38,25 +38,24 @@
                 let selectedDeviceId;
                 const qrReader = new ZXing.BrowserQRCodeReader();
                 const barReader = new ZXing.BrowserBarcodeReader();
-                const sourceSelect = document.getElementById('sourceSelect');
-                const sourceSelectPanel = document.getElementById('sourceSelectPanel');
 
                 qrReader.getVideoInputDevices()
                 .then((videoInputDevices) => {
+                    const sourceSelect = document.getElementById('sourceSelect');
                     videoInputDevices.reverse();
                     selectedDeviceId = videoInputDevices[0].deviceId;
-                    if (videoInputDevices.length > 1)
+                    if (videoInputDevices.length >= 1)
                     {
                         videoInputDevices.forEach((element) => {
                             const sourceOption = document.createElement('option');
                             sourceOption.text = element.label;
                             sourceOption.value = element.deviceId;
-                            sourceSelect.appendchild(sourceOption);
+                            sourceSelect.appendChild(sourceOption);
                         });
-
                         sourceSelect.onchange = () => {
                             selectedDeviceId = sourceSelect.value;
                         };
+                        const sourceSelectPanel = document.getElementById('sourceSelectPanel');
                         sourceSelectPanel.style.display = 'block';
                     }
                 })
