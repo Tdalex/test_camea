@@ -48,15 +48,10 @@
                     {
                         selectedDeviceId = videoInputDevices[1].deviceId;
 
-                        videoInputDevices.forEach(function(element, idx, array)
-                        {
+                        videoInputDevices.forEach((element) => {
                             sourceOption.text = element.label;
                             sourceOption.value = element.deviceId;
-                            if (idx === array.length)
-                            {
-                                sourceOption.checked = true;
-                            }
-                            sourceSelect.appendChild(sourceOption);
+                            sourceSelect.prependchild(sourceOption);
                         });
 
                         sourceSelect.onchange = () => {
