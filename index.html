@@ -25,15 +25,15 @@
             </select>
         </div>
 
-        <div>
-            <canvas id="canvas" width="320" height="240" style="float: bottom;"></canvas>
-        </div>
-
         <label>Result:</label>
         <blockquote>
             <p id="result"></p><br>
             <p id="error"></p>
         </blockquote>
+
+        <div>
+            <canvas id="canvas" width="640" height="480" style="float: bottom;"></canvas>
+        </div>
 
         <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
         <script type="text/javascript">
@@ -111,17 +111,16 @@
                 var ctx = canvas.getContext('2d');
                 var imageInput = document.getElementById('image');
                 imageInput.addEventListener('change', handleImage, false);
-                var img;
 
                 function handleImage(e)
                 {
                     var reader = new FileReader();
-                    canvas.width = 320;
-                    canvas.height = 240;
+                    canvas.width = 640;
+                    canvas.height = 480;
 
                     reader.onload = function(event)
                     {
-                        img = new Image();
+                        var img = new Image();
                         img.onload = function()
                         {
                             var ratio = 1;
