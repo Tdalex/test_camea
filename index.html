@@ -141,7 +141,17 @@
                     };
 
                     reader.readAsDataURL(e.target.files[0]);
-//                    scanBarcodeImage();
+                    qrReader.decodeFromImage(canvas).then((result) => {
+                        document.getElementById('result').textContent = result.text;
+                    }).catch((err) => {
+                        document.getElementById('error').textContent = err;
+                    });
+
+                    barReader.decodeFromImage(canvas).then((result) => {
+                        document.getElementById('result').textContent = result.text;
+                    }).catch((err) => {
+                        document.getElementById('error').textContent = err;
+                    });
                 }
 
 
