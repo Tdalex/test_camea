@@ -93,16 +93,19 @@
                         barcodeReader();
                     }).catch((err) => {
                         document.getElementById('result').textContent = err;
+                        barcodeReader();
                     });
                 }
 
                 var qrcodeReader = function()
                 {
-                    qrReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) => {
+                    qrReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) =>
+                    {
                         document.getElementById('result').textContent = result.text;
                         qrcodeReader();
                     }).catch((err) => {
                         document.getElementById('result').textContent = err;
+                        qrcodeReader();
                     });
                 }
 
