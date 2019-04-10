@@ -42,23 +42,21 @@
                 qrReader.getVideoInputDevices()
                 .then((videoInputDevices) => {
                     selectedDeviceId = videoInputDevices[0].deviceId;
-                    if (videoInputDevices.length > 1)
-                    {
-                        selectedDeviceId = videoInputDevices[1].deviceId;
-
-                        videoInputDevices.forEach((element) => {
-                            const sourceOption = document.createElement('option');
-                            sourceOption.text = element.label;
-                            sourceOption.value = element.deviceId;
-                            sourceSelect.appendChild(sourceOption);
-                        });
-
-                        sourceSelect.onchange = () => {
-                            selectedDeviceId = sourceSelect.value;
-                        };
-
-                        sourceSelectPanel.style.display = 'block';
-                    }
+//                    if (videoInputDevices.length > 1)
+//                    {
+//                        videoInputDevices.forEach((element) => {
+//                            const sourceOption = document.createElement('option');
+//                            sourceOption.text = element.label;
+//                            sourceOption.value = element.deviceId;
+//                            sourceSelect.appendChild(sourceOption);
+//                        });
+//
+//                        sourceSelect.onchange = () => {
+//                            selectedDeviceId = sourceSelect.value;
+//                        };
+//
+//                        sourceSelectPanel.style.display = 'block';
+//                    }
                 })
                 .catch((err) => {
                     console.error(err);
