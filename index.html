@@ -40,15 +40,15 @@
                 const barReader = new ZXing.BrowserBarcodeReader();
                 const sourceSelect = document.getElementById('sourceSelect');
                 const sourceSelectPanel = document.getElementById('sourceSelectPanel');
-                const sourceOption = document.createElement('option');
 
                 qrReader.getVideoInputDevices()
                 .then((videoInputDevices) => {
-//                    videoInputDevices.reverse();
+                    videoInputDevices.reverse();
                     selectedDeviceId = videoInputDevices[0].deviceId;
                     if (videoInputDevices.length > 1)
                     {
                         videoInputDevices.forEach((element) => {
+                            const sourceOption = document.createElement('option');
                             sourceOption.text = element.label;
                             sourceOption.value = element.deviceId;
                             sourceSelect.appendchild(sourceOption);
