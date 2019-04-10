@@ -43,15 +43,15 @@
 
                 qrReader.getVideoInputDevices()
                 .then((videoInputDevices) => {
+                    videoInputDevices.reverse();
                     selectedDeviceId = videoInputDevices[0].deviceId;
                     if (videoInputDevices.length > 1)
                     {
-                        selectedDeviceId = videoInputDevices[1].deviceId;
 
                         videoInputDevices.forEach((element) => {
                             sourceOption.text = element.label;
                             sourceOption.value = element.deviceId;
-                            sourceSelect.prependchild(sourceOption);
+                            sourceSelect.appendchild(sourceOption);
                         });
 
                         sourceSelect.onchange = () => {
