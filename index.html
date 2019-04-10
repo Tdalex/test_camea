@@ -25,6 +25,10 @@
             </select>
         </div>
 
+        <div>
+            <canvas id="canvas" width="320" height="240" style="display: none; float: bottom;"></canvas>
+        </div>
+
         <label>Result:</label>
         <blockquote>
             <p id="result"></p><br>
@@ -36,9 +40,11 @@
             window.addEventListener('load', function()
             {
                 let selectedDeviceId;
+                // initialisation des lecteurs 1D et 2D
                 const qrReader = new ZXing.BrowserQRCodeReader();
                 const barReader = new ZXing.BrowserBarcodeReader();
 
+                // recuperation de la liste des cameras
                 qrReader.getVideoInputDevices()
                 .then((videoInputDevices) => {
                     const sourceSelect = document.getElementById('sourceSelect');
@@ -63,6 +69,7 @@
                     console.error(err);
                 });
 
+                // lance le scan
                 document.getElementById('startButton').addEventListener('click', () => {
                     barcodeReader();
                     qrcodeReader();
@@ -92,12 +99,52 @@
                     });
                 };
 
+                // reset tout les scanners et les resultats
                 document.getElementById('resetButton').addEventListener('click', () => {
                     document.getElementById('result').textContent = '';
                     document.getElementById('error').textContent = '';
                     barReader.reset();
                     qrReader.reset();
                 });
+
+                var canvas = document.getElementById('canvas');
+                var ctx = canvas.getContext('2d');
+                var imageInput = document.getElementById('imageInput');
+                imageInput.addEventListener('change', handleImage, false);
+
+                function handleImage(e)
+                {
+                    var reader = new FileReader();
+                    canvas.width = 320;
+                    canvas.height = 240;
+
+                    reader.onload = function(event)
+                    {
+                        var img = new Image();
+                        img.onload = function()
+                        {
+                            var ratio = 1;
+                            if (img.height > canvas.height)
+                            {
+                                ratio = img.height / canvas.height;
+                            }
+                            else if (img.width > canvas.width)
+                            {
+                                ratio = img.width / canvas.width;
+                            }
+
+                            canvas.width = img.width / ratio;
+                            canvas.height = img.height / ratio;
+                            ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
+                        };
+                        img.src = event.target.result;
+                    };
+
+                    reader.readAsDataURL(e.target.files[0]);
+//                    scanBarcodeImage();
+                }
+
+
             });
         </script>
 
