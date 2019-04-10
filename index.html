@@ -26,7 +26,8 @@
 
         <label>Result:</label>
         <blockquote>
-            <p id="result"></p>
+            <p id="result"></p><br>
+            <p id="error"></p>
         </blockquote>
 
         <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
@@ -41,7 +42,7 @@
 
                 qrReader.getVideoInputDevices()
                 .then((videoInputDevices) => {
-                    selectedDeviceId = videoInputDevices[0].deviceId;
+                    selectedDeviceId = videoInputDevices[1].deviceId;
                     if (videoInputDevices.length > 1)
                     {
                         videoInputDevices.forEach((element) => {
@@ -74,7 +75,7 @@
                         document.getElementById('result').textContent = result.text;
                         barcodeReader();
                     }).catch((err) => {
-                        document.getElementById('result').textContent = err;
+                        document.getElementById('error').textContent = err;
                         barcodeReader();
                     });
                 }
@@ -86,13 +87,14 @@
                         document.getElementById('result').textContent = result.text;
                         qrcodeReader();
                     }).catch((err) => {
-                        document.getElementById('result').textContent = err;
+                        document.getElementById('error').textContent = err;
                         qrcodeReader();
                     });
                 }
 
                 document.getElementById('resetButton').addEventListener('click', () => {
                     document.getElementById('result').textContent = '';
+                    document.getElementById('error').textContent = '';
                     barReader.reset();
                     qrReader.reset();
                 });
