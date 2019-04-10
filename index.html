@@ -41,11 +41,10 @@
                 const sourceSelect = document.getElementById('sourceSelect');
                 const sourceSelectPanel = document.getElementById('sourceSelectPanel');
                 const sourceOption = document.createElement('option');
-                sourceSelectPanel.style.display = 'block';
 
                 qrReader.getVideoInputDevices()
                 .then((videoInputDevices) => {
-                    videoInputDevices.reverse();
+//                    videoInputDevices.reverse();
                     selectedDeviceId = videoInputDevices[0].deviceId;
                     if (videoInputDevices.length > 1)
                     {
@@ -58,7 +57,7 @@
                         sourceSelect.onchange = () => {
                             selectedDeviceId = sourceSelect.value;
                         };
-
+                        sourceSelectPanel.style.display = 'block';
                     }
                 })
                 .catch((err) => {
