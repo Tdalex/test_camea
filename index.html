@@ -32,7 +32,7 @@
         </blockquote>
 
         <div>
-            <canvas id="canvas" width="640" height="480" style="float: bottom;"></canvas>
+            <canvas id="canvas" width="320" height="240" style="float: bottom;"></canvas>
         </div>
 
         <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
@@ -118,13 +118,14 @@
                 function traitementImage(e)
                 {
                     var reader = new FileReader();
-                    canvas.width = 640;
-                    canvas.height = 480;
+                    canvas.width = 320;
+                    canvas.height = 240;
 
                     reader.onload = function(event)
                     {
                         handleImage(event);
-                        if (readError == 2)
+                        // tourne l'image si code barre / qrCode non lisible
+                        if (readError === 2)
                         {
                             rotate_ccw(event);
                         }
@@ -174,7 +175,6 @@
                         ctx.translate(h, 0);
                         ctx.rotate((90 * Math.PI) / 180);
                         ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, w, h);
-
                     };
                     img.src = event.target.result;
                     read_code(event.target.result);
@@ -199,7 +199,5 @@
                 }
             });
         </script>
-
     </body>
-
 </html>
