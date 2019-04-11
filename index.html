@@ -110,9 +110,9 @@
                 var canvas = document.getElementById('canvas');
                 var ctx = canvas.getContext('2d');
                 var imageInput = document.getElementById('image');
-                imageInput.addEventListener('change', handleImage, false);
+                imageInput.addEventListener('change', traitementImage, false);
 
-                function handleImage(e)
+                function traitementImage(e)
                 {
                     var reader = new FileReader();
                     canvas.width = 640;
@@ -120,38 +120,71 @@
 
                     reader.onload = function(event)
                     {
-                        var img = new Image();
-                        img.onload = function()
-                        {
-                            var ratio = 1;
-                            if (img.height > canvas.height)
-                            {
-                                ratio = img.height / canvas.height;
-                            }
-                            else if (img.width > canvas.width)
-                            {
-                                ratio = img.width / canvas.width;
-                            }
-                            canvas.width = img.width / ratio;
-                            canvas.height = img.height / ratio;
-                            ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
-                        };
-                        img.src = event.target.result;
-
-                        qrReader.decodeFromImage(undefined, event.target.result).then((result) => {
-                            document.getElementById('result').textContent = result.text;
-                        }).catch((err) => {
-                            document.getElementById('error').textContent = err;
-                        });
-
-                        barReader.decodeFromImage(undefined, event.target.result).then((result) => {
-                            document.getElementById('result').textContent = result.text;
-                        }).catch((err) => {
-                            document.getElementById('error').textContent = err;
-                        });
+                        handleImage(event);
+//                        rotate_ccw(event);
                     };
-
                     reader.readAsDataURL(e.target.files[0]);
+                }
+
+                function handleImage(event)
+                {
+                    // draw image
+                    var img = new Image();
+                    img.onload = function()
+                    {
+                        var ratio = 1;
+                        if (img.height > canvas.height)
+                        {
+                            ratio = img.height / canvas.height;
+                        }
+                        else if (img.width > canvas.width)
+                        {
+                            ratio = img.width / canvas.width;
+                        }
+
+                        canvas.width = img.width / ratio;
+                        canvas.height = img.height / ratio;
+                        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
+                    };
+                    img.src = event.target.result;
+                    read_code(event.target.result);
+                }
+
+                function rotate_ccw(event)
+                {
+                    // draw image
+                    var img = new Image();
+                    img.onload = function()
+                    {
+                        var w = img.width > canvas.height ? canvas.height : img.width;
+                        var ratio = (img.width / w);
+                        var h = (img.height / ratio);
+                        canvas.width = h;
+                        canvas.height = w;
+
+                        ctx.translate(h, 0);
+                        ctx.rotate((90 * Math.PI) / 180);
+                        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, w, h);
+
+                    };
+                    img.src = event.target.result;
+                    read_code(event.target.result);
+                }
+
+
+                function read_code(imgurl)
+                {
+                    qrReader.decodeFromImage(undefined, imgurl).then((result) => {
+                        document.getElementById('result').textContent = result.text;
+                    }).catch((err) => {
+                        document.getElementById('error').textContent = err;
+                    });
+
+                    barReader.decodeFromImage(undefined, imgurl).then((result) => {
+                        document.getElementById('result').textContent = result.text;
+                    }).catch((err) => {
+                        document.getElementById('error').textContent = err;
+                    });
                 }
             });
         </script>
