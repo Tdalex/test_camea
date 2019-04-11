@@ -122,6 +122,7 @@
                     {
                         $('#videoModal').modal('hide');
                         document.getElementById('result').textContent = result.text;
+                        codeReader.reset();
                     }).catch((err) => {
                         console.log(err);
                         document.getElementById('error').textContent = err;
