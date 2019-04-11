@@ -107,11 +107,14 @@
                     qrReader.reset();
                 });
 
+
                 var canvas = document.getElementById('canvas');
                 var ctx = canvas.getContext('2d');
                 var imageInput = document.getElementById('image');
                 imageInput.addEventListener('change', traitementImage, false);
+                var readError = 0;
 
+                // traitement de l'image uploadé
                 function traitementImage(e)
                 {
                     var reader = new FileReader();
@@ -121,11 +124,16 @@
                     reader.onload = function(event)
                     {
                         handleImage(event);
-//                        rotate_ccw(event);
+                        if (readError == 2)
+                        {
+                            rotate_ccw(event);
+                        }
+                        readError = 0;
                     };
                     reader.readAsDataURL(e.target.files[0]);
                 }
 
+                // affiche l'image uploadé dans un canvas
                 function handleImage(event)
                 {
                     // draw image
@@ -150,6 +158,7 @@
                     read_code(event.target.result);
                 }
 
+                // tourne l'image de 90° dans le sens inverse des aiguilles d'une montre
                 function rotate_ccw(event)
                 {
                     // draw image
@@ -171,18 +180,20 @@
                     read_code(event.target.result);
                 }
 
-
+                // scan de l'image uploadé
                 function read_code(imgurl)
                 {
                     qrReader.decodeFromImage(undefined, imgurl).then((result) => {
                         document.getElementById('result').textContent = result.text;
                     }).catch((err) => {
+                        readError++;
                         document.getElementById('error').textContent = err;
                     });
 
                     barReader.decodeFromImage(undefined, imgurl).then((result) => {
                         document.getElementById('result').textContent = result.text;
                     }).catch((err) => {
+                        readError++;
                         document.getElementById('error').textContent = err;
                     });
                 }
