@@ -11,7 +11,7 @@
             #videoContainer {
                 position: relative;
             }
-            #box {
+            #cadran {
                 width: 90px;
                 height: 60px;
                 border-color: blue;
@@ -22,6 +22,7 @@
                 top: 90px;
                 border-width: 2px;
                 opacity: 0.5;
+                display: none;
             }
         </style>
     </head>
@@ -35,7 +36,7 @@
         <div>
             <label for="image">img: </label><input name="image" id="image" type="file"><br>
             <div id="videoContainer">
-                <div id="box"></div>
+                <div id="cadran"></div>
                 <video id="video" width="320" height="240" style="border: 1px solid gray"></video>
             </div>
         </div>
@@ -63,6 +64,7 @@
                 let selectedDeviceId;
                 // initialisation des lecteurs 1D et 2D
                 const codeReader = new ZXing.BrowserMultiFormatReader();
+                const cadran = document.getElementById('cadran');
 
                 // recuperation de la liste des cameras
                 codeReader.getVideoInputDevices()
@@ -91,6 +93,7 @@
 
                 // lance le scan
                 document.getElementById('startButton').addEventListener('click', () => {
+                    cadran.style.display = "block";
                     codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) =>
                     {
                         document.getElementById('result').textContent = result.text;
@@ -102,6 +105,8 @@
 
                 // reset tout les scanners et les resultats
                 document.getElementById('resetButton').addEventListener('click', () => {
+                    cadran.style.display = "none";
+
                     document.getElementById('result').textContent = '';
                     document.getElementById('error').textContent = '';
                     codeReader.reset();
