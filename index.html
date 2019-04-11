@@ -90,7 +90,6 @@
                 // initialisation des lecteurs 1D et 2D
                 const codeReader = new ZXing.BrowserMultiFormatReader();
                 const cadran = document.getElementById('cadran');
-                const videoModal = document.getElementById('videoModal');
 
                 // recuperation de la liste des cameras
                 codeReader.getVideoInputDevices()
@@ -121,7 +120,7 @@
                 document.getElementById('startButton').addEventListener('click', () => {
                     codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) =>
                     {
-                        videoModal.modal('hide');
+                        $('#videoModal').modal('hide');
                         document.getElementById('result').textContent = result.text;
                     }).catch((err) => {
                         console.log(err);
