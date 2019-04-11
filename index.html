@@ -42,8 +42,7 @@
             {
                 let selectedDeviceId;
                 // initialisation des lecteurs 1D et 2D
-                const qrReader = new ZXing.BrowserQRCodeReader();
-                const barReader = new ZXing.BrowserBarcodeReader();
+                const qrReader = new ZXing.BrowserMultiFormatReader();
 
                 // recuperation de la liste des cameras
                 qrReader.getVideoInputDevices()
@@ -72,23 +71,8 @@
 
                 // lance le scan
                 document.getElementById('startButton').addEventListener('click', () => {
-                    barcodeReader();
                     qrcodeReader();
                 });
-
-                var barcodeReader = function()
-                {
-                    barReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) =>
-                    {
-                        document.getElementById('result').textContent = result.text;
-//                        barcodeReader();
-                    }).catch((err) => {
-                        console.log("errorBar");
-                        console.log(err);
-                        document.getElementById('errorBar').textContent = err;
-//                        barcodeReader();
-                    });
-                };
 
                 var qrcodeReader = function()
                 {
@@ -108,7 +92,6 @@
                 document.getElementById('resetButton').addEventListener('click', () => {
                     document.getElementById('result').textContent = '';
                     document.getElementById('error').textContent = '';
-                    barReader.reset();
                     qrReader.reset();
                 });
 
@@ -196,15 +179,6 @@
                         console.log(err);
                         document.getElementById('errorQr').textContent = err;
 
-                    });
-
-                    barReader.decodeFromImage(undefined, imgurl).then((result) => {
-                        document.getElementById('result').textContent = result.text;
-                    }).catch((err) => {
-                        readError++;
-                        console.log("errorBar");
-                        console.log(err);
-                        document.getElementById('errorBar').textContent = err;
                     });
                 }
             });
