@@ -41,8 +41,7 @@
             window.addEventListener('load', function()
             {
                 let selectedDeviceId;
-
-                BrowserQRCodeReader.prototype.createBinaryBitmap = function(mediaElement)
+                BrowserCodeReader.prototype.createBinaryBitmap = function(mediaElement)
                 {
                     if (undefined === this.canvasElementContext)
                     {
@@ -85,6 +84,7 @@
                     // hybridBinarizer.source.height = squareSize;
                     return new BinaryBitmap(hybridBinarizer);
                 };
+
 
                 // initialisation des lecteurs 1D et 2D
                 const qrReader = new ZXing.BrowserQRCodeReader();
