@@ -16,7 +16,7 @@
 
         <div>
             <label for="image">img: </label><input name="image" id="image" type="file"><br>
-            <video id="video" width="300" height="200" style="border: 1px solid gray"></video>
+            <video id="video" width="320" height="240" style="border: 1px solid gray"></video>
         </div>
 
         <div id="sourceSelectPanel" style="display:none">
@@ -28,7 +28,8 @@
         <label>Result:</label>
         <blockquote>
             <p id="result"></p><br>
-            <p id="error"></p>
+            <p id="errorBar"></p>
+            <p id="errorQr"></p>
         </blockquote>
 
         <div>
@@ -82,7 +83,9 @@
                         document.getElementById('result').textContent = result.text;
 //                        barcodeReader();
                     }).catch((err) => {
-                        document.getElementById('error').textContent = err;
+                        console.log("errorBar");
+                        console.log(err);
+                        document.getElementById('errorBar').textContent = err;
 //                        barcodeReader();
                     });
                 };
@@ -94,7 +97,9 @@
                         document.getElementById('result').textContent = result.text;
 //                        qrcodeReader();
                     }).catch((err) => {
-                        document.getElementById('error').textContent = err;
+                        console.log("errorQr");
+                        console.log(err);
+                        document.getElementById('errorQr').textContent = err;
 //                        qrcodeReader();
                     });
                 };
@@ -187,14 +192,19 @@
                         document.getElementById('result').textContent = result.text;
                     }).catch((err) => {
                         readError++;
-                        document.getElementById('error').textContent = err;
+                        console.log("errorQr");
+                        console.log(err);
+                        document.getElementById('errorQr').textContent = err;
+
                     });
 
                     barReader.decodeFromImage(undefined, imgurl).then((result) => {
                         document.getElementById('result').textContent = result.text;
                     }).catch((err) => {
                         readError++;
-                        document.getElementById('error').textContent = err;
+                        console.log("errorBar");
+                        console.log(err);
+                        document.getElementById('errorBar').textContent = err;
                     });
                 }
             });
