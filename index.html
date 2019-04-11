@@ -55,7 +55,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="resetButton btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="resetButton" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -130,8 +130,7 @@
                 });
 
                 // reset le scanner et les resultats
-                document.getElementById('resetButton').addEventListener("click", function()
-                {
+                document.getElementById('resetButton').addEventListener('click', () => {
 //                    document.getElementById('result').textContent = '';
 //                    document.getElementById('error').textContent = '';
                     codeReader.reset();
