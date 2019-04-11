@@ -28,8 +28,7 @@
         <label>Result:</label>
         <blockquote>
             <p id="result"></p><br>
-            <p id="errorBar"></p>
-            <p id="errorQr"></p>
+            <p id="error"></p>
         </blockquote>
 
         <div>
@@ -42,10 +41,10 @@
             {
                 let selectedDeviceId;
                 // initialisation des lecteurs 1D et 2D
-                const qrReader = new ZXing.BrowserMultiFormatReader();
+                const codeReader = new ZXing.BrowserMultiFormatReader();
 
                 // recuperation de la liste des cameras
-                qrReader.getVideoInputDevices()
+                codeReader.getVideoInputDevices()
                 .then((videoInputDevices) => {
                     const sourceSelect = document.getElementById('sourceSelect');
                     videoInputDevices.reverse();
@@ -71,28 +70,20 @@
 
                 // lance le scan
                 document.getElementById('startButton').addEventListener('click', () => {
-                    qrcodeReader();
-                });
-
-                var qrcodeReader = function()
-                {
-                    qrReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) =>
+                    codeReader.decodeFromInputVideoDevice(selectedDeviceId, 'video').then((result) =>
                     {
                         document.getElementById('result').textContent = result.text;
-//                        qrcodeReader();
                     }).catch((err) => {
-                        console.log("errorQr");
                         console.log(err);
-                        document.getElementById('errorQr').textContent = err;
-//                        qrcodeReader();
+                        document.getElementById('error').textContent = err;
                     });
-                };
+                });
 
                 // reset tout les scanners et les resultats
                 document.getElementById('resetButton').addEventListener('click', () => {
                     document.getElementById('result').textContent = '';
                     document.getElementById('error').textContent = '';
-                    qrReader.reset();
+                    codeReader.reset();
                 });
 
 
@@ -100,7 +91,7 @@
                 var ctx = canvas.getContext('2d');
                 var imageInput = document.getElementById('image');
                 imageInput.addEventListener('change', traitementImage, false);
-                var readError = 0;
+                var readError = false;
 
                 // traitement de l'image uploadé
                 function traitementImage(e)
@@ -113,11 +104,11 @@
                     {
                         handleImage(event);
                         // tourne l'image si code barre / qrCode non lisible
-                        if (readError === 2)
+                        if (readError)
                         {
                             rotate_ccw(event);
                         }
-                        readError = 0;
+                        readError = false;
                     };
                     reader.readAsDataURL(e.target.files[0]);
                 }
@@ -171,13 +162,12 @@
                 // scan de l'image uploadé
                 function read_code(imgurl)
                 {
-                    qrReader.decodeFromImage(undefined, imgurl).then((result) => {
+                    codeReader.decodeFromImage(undefined, imgurl).then((result) => {
                         document.getElementById('result').textContent = result.text;
                     }).catch((err) => {
-                        readError++;
-                        console.log("errorQr");
+                        readError = true;
                         console.log(err);
-                        document.getElementById('errorQr').textContent = err;
+                        document.getElementById('error').textContent = err;
 
                     });
                 }
