@@ -87,7 +87,7 @@
         </blockquote>
 
         <div>
-            <canvas id="canvas" width="320" height="240" style="float: bottom;"></canvas>
+            <canvas id="canvas" width="100%" height="100" style="float: bottom;"></canvas>
         </div>
 
 
@@ -103,6 +103,8 @@
                 // initialisation des lecteurs 1D et 2D
                 const codeReader = new ZXing.BrowserMultiFormatReader();
                 const cadran = document.getElementById('cadran');
+                const cw = canvas.width;
+                const ch = canvas.height;
 
                 // recuperation de la liste des cameras
                 codeReader.getVideoInputDevices()
@@ -159,8 +161,8 @@
                 function traitementImage(e)
                 {
                     var reader = new FileReader();
-                    canvas.width = 320;
-                    canvas.height = 240;
+                    canvas.width = cw;
+                    canvas.height = ch;
 
                     reader.onload = function(event)
                     {
